@@ -1,4 +1,5 @@
 from queue import Queue
+import numpy as np
 
 start = [
     [0,0,0,0],
@@ -7,6 +8,8 @@ start = [
     [2,2,2,1]
 ]
 
+start_node = np.array(start)
+
 end = [
     [0,0,0,0],
     [0,2,0,0],
@@ -14,26 +17,28 @@ end = [
     [0,2,0,1]
 ]
 
+end_node = np.array(end)
+
 def equalStates(state1, state2):
+    '''
+    Returns a boolean to determine the equality of two states
+    '''
     return state1 == state2
 
 def findOne(state):
-    for rowCoord in range(len(state)):
-        for colCoord in range(len(state[rowCoord])):
-            if state[rowCoord][colCoord] == 1:
-                return [rowCoord,colCoord]
-
+    '''
+    Returns the indexes of the 2-d array when an element is equal to 1
+    '''
+    return [np.where(state == 1)[0][0], np.where(state == 1)[1][0]]
 
 def expandState(state):
     new_state = []
     try:
-        ''' up -- CHANGE THIS CODE '''
-        state[findOne(state)[0]][findOne(state)[1]] = 0
-        state[findOne(state)[0]-1][findOne(state)[1]] = 1
+        pass
     except IndexError:
         pass
 
-def graphSearch(start, end):
+def graphSearch(start_node, end_node):
     solved = False
     route = []
     queue = Queue()
