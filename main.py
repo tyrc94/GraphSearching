@@ -1,6 +1,6 @@
 from queue import Queue
 import numpy as np
-
+import sys
 start = [
     [0,0,0,0],
     [0,0,0,0],
@@ -24,6 +24,12 @@ def equalStates(state1, state2):
     Returns a boolean to determine the equality of two states
     '''
     return np.array_equal(state1, state2)
+
+def np_to_tuple(array):
+    ''' 
+    Converts numpy array to a tuple
+    '''
+    return tuple(map(tuple,array))
 
 def findOne(state):
     '''
@@ -71,7 +77,7 @@ def expandState(state):
 def graphSearch(start_node, end_node):
     solved = False
     route = []
-    visited = []
+    visited = set()
 
     queue = Queue() 
     queue.put(start_node)
@@ -83,11 +89,10 @@ def graphSearch(start_node, end_node):
             return f"Route taken: {route}"
         else:
             for expanded, direction in zip(expandState(current).values(), expandState(current)):
-                if expanded.tolist() not in visited:
+                if np_to_tuple(expanded) not in visited:
                     queue.put(expanded)
-                    visited.append(expanded.tolist())
+                    visited.add(np_to_tuple(expanded))
                     route.append(direction)
-                else:
-                    pass
+                    
         
 print(graphSearch(start_node, end_node))
