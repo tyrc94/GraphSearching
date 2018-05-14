@@ -39,7 +39,7 @@ def expandState(state):
         stateUp = np.copy(state)
         stateUp[row][col] = stateUp[row - 1][col]
         stateUp[row - 1][col] = 1
-        new_state['up'] = stateUp
+        new_state['U'] = stateUp
     except IndexError:
         pass
 
@@ -47,7 +47,7 @@ def expandState(state):
         stateDn = np.copy(state)
         stateDn[row][col] = stateDn[row + 1][col]
         stateDn[row + 1][col] = 1
-        new_state['Down'] = stateDn
+        new_state['D'] = stateDn
     except IndexError:
         pass
 
@@ -55,7 +55,7 @@ def expandState(state):
         stateLeft = np.copy(state)
         stateLeft[row][col] = stateLeft[row][col - 1]
         stateLeft[row][col - 1] = 1
-        new_state['Left'] = stateLeft
+        new_state['L'] = stateLeft
     except IndexError:
         pass
 
@@ -63,7 +63,7 @@ def expandState(state):
         stateRight = np.copy(state)
         stateRight[row][col] = stateRight[row][col + 1]
         stateRight[row][col + 1] = 1
-        new_state['Right'] = stateRight
+        new_state['R'] = stateRight
     except IndexError:
         pass
     return new_state
@@ -72,21 +72,22 @@ def graphSearch(start_node, end_node):
     solved = False
     route = []
     visited = []
-    queue = Queue()
+
+    queue = Queue() 
     queue.put(start_node)
     while not queue.empty():
         current = queue.get()
-        #print(current)
         if equalStates(current, end_node):
             solved = True
-            return "Ta da!"
+        
+            return f"Route taken: {route}"
         else:
-            for expanded in expandState(current).values():
+            for expanded, direction in zip(expandState(current).values(), expandState(current)):
                 if expanded.tolist() not in visited:
                     queue.put(expanded)
                     visited.append(expanded.tolist())
+                    route.append(direction)
                 else:
                     pass
-            route.append()
         
 print(graphSearch(start_node, end_node))
