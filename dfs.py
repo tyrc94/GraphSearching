@@ -1,6 +1,10 @@
+'''
+A depth first searching algorithm
+'''
+
 from queue import Queue
 import numpy as np
-import sys
+
 start = [
     [0,0,0,0],
     [0,0,0,0],
@@ -38,9 +42,13 @@ def findOne(state):
     return [np.where(state == 1)[0][0], np.where(state == 1)[1][0]]
 
 def expandState(state):
+    '''
+    Returns a dictionary of valid directions to go from current state
+    '''
     new_state = {}
     row = findOne(state)[0]
     col = findOne(state)[1]
+
     try:
         stateUp = np.copy(state)
         stateUp[row][col] = stateUp[row - 1][col]
@@ -72,27 +80,35 @@ def expandState(state):
         new_state['R'] = stateRight
     except IndexError:
         pass
+    
     return new_state
 
-def graphSearch(start_node, end_node):
-    solved = False
-    route = []
-    visited = set()
 
+def graphSearch(start_node, end_node):
+    '''
+    Depth first graph searching algorithm
+    '''
+    solved = False
+    pred = {}
+    visited = set()
     queue = Queue() 
     queue.put(start_node)
-    while not queue.empty():
+    
+    while queue:
         current = queue.get()
         if equalStates(current, end_node):
             solved = True
-        
-            return f"Route taken: {route}"
+            path = []
+            while not equalStates(current, start_node):
+                path.append(pred[np_to_tuple(current)][1])
+                current = pred[np_to_tuple(current)][0]
+            return path[::-1]
         else:
             for expanded, direction in zip(expandState(current).values(), expandState(current)):
                 if np_to_tuple(expanded) not in visited:
                     queue.put(expanded)
                     visited.add(np_to_tuple(expanded))
-                    route.append(direction)
-                    
-        
+                    pred[np_to_tuple(expanded)] = [current, direction]
+
+
 print(graphSearch(start_node, end_node))
