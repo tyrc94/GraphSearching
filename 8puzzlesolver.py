@@ -1,27 +1,10 @@
 '''
-A depth first searching algorithm
+An 8 puzzle solver using a depth first search
 '''
 
 from queue import Queue
 import numpy as np
-
-start = [
-    [0,0,0,0],
-    [0,0,0,0],
-    [0,0,0,0],
-    [2,2,2,1]
-]
-
-start_node = np.array(start)
-
-end = [
-    [0,0,0,0],
-    [0,2,0,0],
-    [0,2,0,0],
-    [0,2,0,1]
-]
-
-end_node = np.array(end)
+import collections
 
 def equalStates(state1, state2):
     '''
@@ -35,19 +18,19 @@ def np_to_tuple(array):
     '''
     return tuple(map(tuple,array))
 
-def findOne(state):
+def findZero(state):
     '''
     Returns the indexes of the 2-d array when an element is equal to 1
     '''
-    return [np.where(state == 1)[0][0], np.where(state == 1)[1][0]]
+    return [np.where(state == 0)[0][0], np.where(state == 0)[1][0]]
 
 def expandState(state):
     '''
     Returns a dictionary of valid directions to go from current state
     '''
     new_state = {}
-    row = findOne(state)[0]
-    col = findOne(state)[1]
+    row = findZero(state)[0]
+    col = findZero(state)[1]
 
     if row > 0:
         stateUp = np.copy(state)
@@ -55,7 +38,7 @@ def expandState(state):
         stateUp[row - 1][col] = 0
         new_state['U'] = stateUp
 
-    if row < len(state[0]) - 1:
+    if row < len(state) - 1:
         stateDn = np.copy(state)
         stateDn[row][col] = stateDn[row + 1][col]
         stateDn[row + 1][col] = 0
@@ -103,4 +86,29 @@ def graphSearch(start_node, end_node):
                     pred[np_to_tuple(expanded)] = [current, direction]
 
 
-print(graphSearch(start_node, end_node))
+def puzzle_solver():
+    '''
+    8 puzzle solver. Inputs are space separated and unique values from 0 to 8
+    '''
+    print("Welcome to the 8 puzzle solver! \nInputs should be space separated and unique values from 0 to 8")
+
+    first_row  = [int(x) for x in input("\nFirst row of three numbers: ").split()]
+    second_row  = [int(x) for x in input("Second row of three numbers: ").split()]
+    third_row  = [int(x) for x in input("Third row of three numbers: ").split()]
+
+    start = [first_row, second_row, third_row]
+
+    start_node = np.array(start)
+
+    end = [
+        [1,2,3],
+        [4,5,6],
+        [7,8,0]
+    ]
+
+    end_node = np.array(end)
+
+    return f'\nSolution: {graphSearch(start_node, end_node)}'
+
+if __name__ == "__main__":
+    print(puzzle_solver())
