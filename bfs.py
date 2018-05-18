@@ -2,7 +2,7 @@
 A depth first searching algorithm
 '''
 
-from queue import LifoQueue
+from queue import Queue
 import numpy as np
 
 start = [
@@ -55,7 +55,7 @@ def expandState(state):
         stateUp[row - 1][col] = 1
         new_state['U'] = stateUp
 
-    if row < len(state[0]) - 1:
+    if row < len(state) - 1:
         stateDn = np.copy(state)
         stateDn[row][col] = stateDn[row + 1][col]
         stateDn[row + 1][col] = 1
@@ -67,7 +67,7 @@ def expandState(state):
         stateLeft[row][col - 1] = 1
         new_state['L'] = stateLeft
 
-    if col < len(state) - 1:
+    if col < len(state[0]) - 1:
         stateRight = np.copy(state)
         stateRight[row][col] = stateRight[row][col + 1]
         stateRight[row][col + 1] = 1
@@ -78,16 +78,16 @@ def expandState(state):
 
 def graphSearch(start_node, end_node):
     '''
-    Depth first graph searching algorithm
+    Breadth first graph searching algorithm
     '''
     solved = False
     pred = {}
     visited = set()
-    stack = LifoQueue() 
-    stack.put(start_node)
+    queue = Queue() 
+    queue.put(start_node)
     
-    while stack:
-        current = stack.get()
+    while queue:
+        current = queue.get()
         if equalStates(current, end_node):
             solved = True
             path = []
@@ -98,9 +98,9 @@ def graphSearch(start_node, end_node):
         else:
             for expanded, direction in zip(expandState(current).values(), expandState(current)):
                 if np_to_tuple(expanded) not in visited:
-                    stack.put(expanded)
+                    queue.put(expanded)
                     visited.add(np_to_tuple(expanded))
                     pred[np_to_tuple(expanded)] = [current, direction]
 
 
-print(len(graphSearch(start_node, end_node)))
+print(graphSearch(start_node, end_node))

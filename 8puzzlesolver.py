@@ -50,7 +50,7 @@ def expandState(state):
         stateLeft[row][col - 1] = 0
         new_state['L'] = stateLeft
 
-    if col < len(state) - 1:
+    if col < len(state[0]) - 1:
         stateRight = np.copy(state)
         stateRight[row][col] = stateRight[row][col + 1]
         stateRight[row][col + 1] = 0
@@ -61,7 +61,7 @@ def expandState(state):
 
 def graphSearch(start_node, end_node):
     '''
-    Depth first graph searching algorithm
+    Breadth first graph searching algorithm
     '''
     solved = False
     pred = {}

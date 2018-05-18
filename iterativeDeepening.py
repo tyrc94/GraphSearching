@@ -55,7 +55,7 @@ def expandState(state):
         stateUp[row - 1][col] = 1
         new_state['U'] = stateUp
 
-    if row < len(state[0]) - 1:
+    if row < len(state) - 1:
         stateDn = np.copy(state)
         stateDn[row][col] = stateDn[row + 1][col]
         stateDn[row + 1][col] = 1
@@ -67,7 +67,7 @@ def expandState(state):
         stateLeft[row][col - 1] = 1
         new_state['L'] = stateLeft
 
-    if col < len(state) - 1:
+    if col < len(state[0]) - 1:
         stateRight = np.copy(state)
         stateRight[row][col] = stateRight[row][col + 1]
         stateRight[row][col + 1] = 1
@@ -76,31 +76,51 @@ def expandState(state):
     return new_state
 
 
-def graphSearch(start_node, end_node):
+def depthLimited(start_node, end_node, max_depth):
     '''
-    Depth first graph searching algorithm
+    Depth limited graph searching algorithm
     '''
     solved = False
     pred = {}
     visited = set()
     stack = LifoQueue() 
     stack.put(start_node)
-    
-    while stack:
+    path = []
+
+    while not stack.empty():
         current = stack.get()
         if equalStates(current, end_node):
             solved = True
-            path = []
             while not equalStates(current, start_node):
                 path.append(pred[np_to_tuple(current)][1])
                 current = pred[np_to_tuple(current)][0]
-            return path[::-1]
+            print(path[::-1])
+            return solved
         else:
-            for expanded, direction in zip(expandState(current).values(), expandState(current)):
-                if np_to_tuple(expanded) not in visited:
-                    stack.put(expanded)
-                    visited.add(np_to_tuple(expanded))
-                    pred[np_to_tuple(expanded)] = [current, direction]
+            depth = 0
+            current2 = current
+            while not equalStates(current2, start_node):
+                depth += 1
+                current2 = pred[np_to_tuple(current2)][0]
+            if depth < max_depth:
+                for expanded, direction in zip(expandState(current).values(), expandState(current)):
+                    if np_to_tuple(expanded) not in visited:
+                        stack.put(expanded)
+                        visited.add(np_to_tuple(expanded))
+                        pred[np_to_tuple(expanded)] = [current, direction]
+            else:
+                continue
+    return solved
 
+def iterativeDeep(start_node, end_node, max_depth):
+    depth = 0
+    while depth <= max_depth:
+        if depthLimited(start_node, end_node, depth) == True:
+            break
+        else:
+            depth += 1
+    if depth > max_depth:
+        return f"{depth} > {max_depth}: No solution found"
+    return depth
 
-print(len(graphSearch(start_node, end_node)))
+print(iterativeDeep(start_node, end_node, 200))
