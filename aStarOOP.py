@@ -13,6 +13,7 @@ def a_star(start_state, end_state):
     end_node = Node(end_state, 0, None, None)
 
     priority_queue.put((start_node.determine_cost(end_node), start_node))
+    counter = 0
     while not priority_queue.empty():
         _, current = priority_queue.get()
         if Node.equal_states(current, end_node):
@@ -23,6 +24,7 @@ def a_star(start_state, end_state):
                 path.insert(0, cur_back.direction)
                 cur_back = cur_back.parent
             print(path)
+            print(counter)
             return solved
 
         else:
@@ -30,6 +32,7 @@ def a_star(start_state, end_state):
                 if new_node not in visited:
                     priority_queue.put((new_node.determine_cost(end_node), new_node))
                     visited.add(new_node)
+                    counter += 1
     return solved
 
 

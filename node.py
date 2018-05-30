@@ -61,6 +61,9 @@ class Node():
     
     @staticmethod
     def taxicab_metric(coord1, coord2):
+        '''
+        Returns a distance between two coordinate points using the taxicab metric
+        '''
         return abs(coord1[0] - coord2[0]) + abs(coord1[1] - coord2[1])
 
     def determine_cost(self, end_node):

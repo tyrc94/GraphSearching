@@ -30,7 +30,7 @@ def depth_limited(start_state, end_state, max_depth):
                 for new_node in current.expand_state():
                     if new_node not in visited:
                         stack.put(new_node)
-                        #visited.add(new_node)
+                        visited.add(new_node)
             else:
                 continue
     return solved
@@ -39,7 +39,7 @@ def depth_limited(start_state, end_state, max_depth):
 
 def iterative_deepening(start_node, end_node, max_depth):
     depth = 0
-    while depth <= max_depth:
+    while depth < max_depth:
         if depth_limited(start_node, end_node, depth):
             break
         else:

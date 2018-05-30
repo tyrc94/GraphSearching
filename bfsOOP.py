@@ -13,6 +13,7 @@ def breadth_first(start_state, end_state):
     end_node = Node(end_state, 0, None, None)
 
     queue.put(start_node)
+    counter = 0
     while not queue.empty():
         current = queue.get()
         if Node.equal_states(current, end_node):
@@ -30,6 +31,7 @@ def breadth_first(start_state, end_state):
                 if new_node not in visited:
                     queue.put(new_node)
                     visited.add(new_node)
+                    counter += 1
     return None
 
 
