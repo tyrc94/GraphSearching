@@ -86,7 +86,7 @@ def graphSearch(start_node, end_node):
     queue = Queue() 
     queue.put(start_node)
     
-    while queue:
+    while not queue.empty():
         current = queue.get()
         if equalStates(current, end_node):
             solved = True
@@ -103,4 +103,4 @@ def graphSearch(start_node, end_node):
                     pred[np_to_tuple(expanded)] = [current, direction]
 
 
-print(graphSearch(start_node, end_node))
+print(f'{graphSearch(start_node, end_node)} \n{len(graphSearch(start_node, end_node))}')

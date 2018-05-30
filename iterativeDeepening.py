@@ -123,4 +123,4 @@ def iterativeDeep(start_node, end_node, max_depth):
         return f"{depth} > {max_depth}: No solution found"
     return depth
 
-print(iterativeDeep(start_node, end_node, 200))
+print(iterativeDeep(start_node, end_node, 2500))
